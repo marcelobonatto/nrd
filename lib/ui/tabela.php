@@ -3,11 +3,46 @@ namespace lib\ui;
 
 class tabela
 {
+    public $classe = "table table-striped";
     public $linhas = array();
+
+    public function IniciarTabela()
+    {
+        $html = '<table';
+
+        if ($this->classe != '')
+        {
+            $html .= " class=\"$this->classe\"";
+        }
+
+        $html .= ">\n";
+
+        return $html;
+    }
+
+    public function FinalizarTabela()
+    {
+        return "</table>\n";
+    }
 
     public function Gerar()
     {
-        $html       = "<table class=\"table table-striped\">\n";
+        $html .= $this->IniciarTabela();
+
+        foreach ($this->linhas as $linha)
+        {
+            $html .= $linha->Gerar();
+        }
+
+        $html .= $this->FinalizarTabela();
+
+        return $html;
+    }
+
+    /*
+    public function Gerar()
+    {
+        $html       = "<table class=\"$this->classe\">\n";
 
         $tdthant    = '';
 
@@ -20,12 +55,12 @@ class tabela
             {
                 if ($tdth == 'th')
                 {
-                    $html   .= "<thead class=\"thead-dark\">\n";
+                    $html   .= $linhat->IniciarCabecalho();
                 }
                 else if ($tdth == 'td')
                 {
-                    $html   .= "</thead>\n";
-                    $html   .= "<tbody>\n";
+                    $html   .= $linhat->FinalizarCabecalho();
+                    $html   .= $linhat->IniciarConteudo();
                 }
 
                 $tdthant = $tdth;
@@ -138,16 +173,17 @@ class tabela
 
         if ($tdthant == 'th')
         {
-            $html   .= "</thead>\n";
+            $html   .= $linhat->FinalizarCabecalho();
         }
         else if ($tdthant == 'td')
         {            
-            $html   .= "</tbody>\n";
+            $html   .= $linhat->FinalizarConteudo();
         }
 
         $html   .= "</table>";
 
         return $html;
     }
+    */
 }
 ?>
