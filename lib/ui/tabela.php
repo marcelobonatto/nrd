@@ -27,7 +27,7 @@ class tabela
 
     public function Gerar()
     {
-        $html .= $this->IniciarTabela();
+        $html = $this->IniciarTabela();
 
         foreach ($this->linhas as $linha)
         {

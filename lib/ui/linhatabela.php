@@ -81,7 +81,7 @@ class linhatabela
 
         if ($this->ehinicio)
         {
-            $html .= ($this->ehtitulo ? $this->IniciarCabecalho() : $this->IniciarConteudo);
+            $html .= ($this->ehtitulo ? $this->IniciarCabecalho() : $this->IniciarConteudo());
         }
         
         $html .= $this->IniciarLinha();

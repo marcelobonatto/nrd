@@ -51,6 +51,11 @@ class celulatabela
             $html .= " colspan=\"$this->spancoluna\"";
         }
 
+        if ($this->alinhamento != '')
+        {
+            $html .= " style=\"text-align: $this->alinhamento\"";
+        }
+
         $html .= ">\n";
 
         return $html;
@@ -64,7 +69,7 @@ class celulatabela
 
     public function Gerar()
     {
-        $html .= $this->IniciarCelula() . $this->valor . $this->FinalizarCelula();
+        $html = $this->IniciarCelula() . $this->valor . $this->FinalizarCelula();
         return $html;
     }
 }
