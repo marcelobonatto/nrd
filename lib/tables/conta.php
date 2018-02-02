@@ -52,11 +52,13 @@ class conta
         $sql        = 'SELECT c.contaId, c.usuarioId, c.contaNome, c.contaTipo, c.contaInicial, c.contaAtiva, ' .
                       'COALESCE(s.saldoValor, c.contaInicial) + ' .
                       'COALESCE((SELECT	SUM(totalValor) ' .
-                      "FROM	(	SELECT	tr.contaId, CAST(DATE_FORMAT(transacaoData, '%Y%m') AS UNSIGNED) AS mesano, SUM(transacaoValor) AS totalValor " .
-                                'FROM	transacoes tr '. 
+                      "FROM	(	SELECT	    tr.contaId, CAST(DATE_FORMAT(transacaoData, '%Y%m') AS UNSIGNED) AS mesano, SUM(transacaoValor) AS totalValor " .
+                                'FROM	    transacoes tr '. 
+                                "GROUP BY	tr.contaId, CAST(DATE_FORMAT(transacaoData, '%Y%m') AS UNSIGNED) " .
                                 'UNION ' .
                                 "SELECT tr.contaIdDestino AS contaId, CAST(DATE_FORMAT(transacaoData, '%Y%m') AS UNSIGNED) AS mesano, SUM(transacaoValor) * -1 AS totalValor " .
                                 'FROM	transacoes tr ' .
+                                "GROUP BY tr.contaIdDestino, CAST(DATE_FORMAT(transacaoData, '%Y%m') AS UNSIGNED) " .
                             ') t '.
                       'WHERE t.contaId = c.contaId '.
                       'AND t.mesano = s.saldoMesAno ' .
