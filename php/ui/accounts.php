@@ -3,7 +3,9 @@ $titulo     = 'Minhas Contas';
 
 include_once('../../header.php');
 
-echo("<div class=\"row\">\n");
+echo("<div class=\"container\">\n");
+echo("<h2>Minhas Contas</h2>\n");
+echo("<div class=\"row w-100\">\n");
 
 //idusuario = d2f98274-d69e-11e7-b2c2-0a002700000d
 $contas = new lib\tables\conta();
@@ -11,7 +13,7 @@ $tipos  = array('DN', 'CC', 'PP', 'CR');
 
 for ($tipo = 0; $tipo < 4; $tipo++)
 {
-    echo("<div class=\"col-sm-6 col-lg-3\">\n");
+    echo("<div class=\"col-3\">\n");
 
     $contarr                    = $contas->ListarPorTipoComSaldoAtual('d2f98274-d69e-11e7-b2c2-0a002700000d', $tipos[$tipo]);
 
@@ -67,6 +69,7 @@ for ($tipo = 0; $tipo < 4; $tipo++)
     echo("</div>\n");
 }
 
+echo("</div>\n");
 echo("</div>\n");
 
 include_once('../../footer.php');
