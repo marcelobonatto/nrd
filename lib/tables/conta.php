@@ -9,7 +9,7 @@ class conta
     public $tipo;
     public $inicial;
     public $ativa;
-    public $saldo;
+    public $saldo;    
   
     public function Listar($usuario)
     {
@@ -49,32 +49,32 @@ class conta
     {
         $matriz     = array();
 
-        $sql        = 'SELECT c.contaId, c.usuarioId, c.contaNome, c.contaTipo, c.contaInicial, c.contaAtiva, ' .
-                      'COALESCE(s.saldoValor, c.contaInicial) + ' .
+        $sql        = 'SELECT c.conta_id, c.usuario_id, c.conta_nome, c.conta_tipo, c.conta_inicio, c.conta_ativo, ' .
+                      'COALESCE(s.saldo_valor, c.conta_inicio) + ' .
                       'COALESCE((SELECT	SUM(totalValor) ' .
-                      "FROM	(	SELECT	    tr.contaId, CAST(DATE_FORMAT(transacaoData, '%Y%m') AS UNSIGNED) AS mesano, SUM(transacaoValor) AS totalValor " .
+                      "FROM	(	SELECT	    tr.conta_id, CAST(DATE_FORMAT(transacao_data, '%Y%m') AS UNSIGNED) AS mesano, SUM(transacao_valor) AS totalValor " .
                                 'FROM	    transacoes tr '. 
-                                "GROUP BY	tr.contaId, CAST(DATE_FORMAT(transacaoData, '%Y%m') AS UNSIGNED) " .
+                                "GROUP BY	tr.conta_id, CAST(DATE_FORMAT(transacao_data, '%Y%m') AS UNSIGNED) " .
                                 'UNION ' .
-                                "SELECT tr.contaIdDestino AS contaId, CAST(DATE_FORMAT(transacaoData, '%Y%m') AS UNSIGNED) AS mesano, SUM(transacaoValor) * -1 AS totalValor " .
+                                "SELECT tr.conta_para AS conta_id, CAST(DATE_FORMAT(transacao_data, '%Y%m') AS UNSIGNED) AS mesano, SUM(transacao_valor) * -1 AS totalValor " .
                                 'FROM	transacoes tr ' .
-                                "GROUP BY tr.contaIdDestino, CAST(DATE_FORMAT(transacaoData, '%Y%m') AS UNSIGNED) " .
+                                "GROUP BY tr.conta_para, CAST(DATE_FORMAT(transacao_data, '%Y%m') AS UNSIGNED) " .
                             ') t '.
-                      'WHERE t.contaId = c.contaId '.
-                      'AND t.mesano = s.saldoMesAno ' .
+                      'WHERE t.conta_id = c.conta_id '.
+                      'AND t.mesano = (s.saldo_ano * 100) + s.saldo_mes ' .
                       '), 0) AS total '.
                       'FROM contas c ' .
-                      'LEFT JOIN (SELECT contaId, saldoId, saldoValor, saldoMesAno ' .
+                      'LEFT JOIN (SELECT conta_id, saldo_id, saldo_valor, saldo_mes, saldo_ano ' .
                       'FROM saldos s '.
-                      'WHERE saldoMesAno = (SELECT MAX(saldoMesAno) ' .
+                      'WHERE (saldo_ano * 100) + saldo_mes = (SELECT MAX((sm.saldo_ano * 100) + sm.saldo_mes) ' .
                       'FROM saldos sm ' .
-                      'WHERE sm.contaId = s.contaId ' .
-                      "AND sm.saldoMesAno <= CAST(DATE_FORMAT(NOW(), '%Y%m') AS UNSIGNED) " .
+                      'WHERE sm.conta_id = s.conta_id ' .
+                      "AND (sm.saldo_ano * 100) + sm.saldo_mes <= CAST(DATE_FORMAT(NOW(), '%Y%m') AS UNSIGNED) " .
                       ') ' .
-                      ') s ON s.contaId = c.contaId ' .
-                      "WHERE usuarioId = '$usuario' " .
-                      "AND contaTipo = '$tipo' " .
-                      'ORDER BY contaTipo, contaNome';
+                      ') s ON s.conta_id = c.conta_id ' .
+                      "WHERE usuario_id = '$usuario' " .
+                      "AND conta_tipo = $tipo " .
+                      'ORDER BY conta_tipo, conta_nome';
 
         $bd         = new bancodados();
         $res        = $bd->Selecionar($sql);
@@ -86,12 +86,12 @@ class conta
                 foreach ($res as $conta)
                 {
                     $obj            = new conta();
-                    $obj->id        = $conta['contaId'];
-                    $obj->usuario   = $conta['usuarioId'];
-                    $obj->nome      = $conta['contaNome'];
-                    $obj->tipo      = $conta['contaTipo'];
-                    $obj->inicial   = $conta['contaInicial'];
-                    $obj->ativa     = $conta['contaAtiva'];
+                    $obj->id        = $conta['conta_id'];
+                    $obj->usuario   = $conta['usuario_id'];
+                    $obj->nome      = $conta['conta_nome'];
+                    $obj->tipo      = $conta['conta_tipo'];
+                    $obj->inicial   = $conta['conta_inicio'];
+                    $obj->ativa     = $conta['conta_ativo'];
                     $obj->saldo     = $conta['total'];
 
                     array_push($matriz, $obj);

@@ -1,7 +1,9 @@
 <?php
+$contateste = '5e619cc2-02ed-49dc-9f65-01b9046c88d2';
+
 $titulo     = 'Minhas Contas';
 
-include_once('../../header.php');
+include_once('../header.php');
 
 echo("<div class=\"container\">\n");
 echo("<h2>Minhas Contas</h2>\n");
@@ -9,13 +11,12 @@ echo("<div class=\"row w-100\">\n");
 
 //idusuario = d2f98274-d69e-11e7-b2c2-0a002700000d
 $contas = new lib\tables\conta();
-$tipos  = array('DN', 'CC', 'PP', 'CR');
 
 for ($tipo = 0; $tipo < 4; $tipo++)
 {
-    echo("<div class=\"col-3\">\n");
+    echo("<div class=\"col-6\">\n");
 
-    $contarr                    = $contas->ListarPorTipoComSaldoAtual('d2f98274-d69e-11e7-b2c2-0a002700000d', $tipos[$tipo]);
+    $contarr                    = $contas->ListarPorTipoComSaldoAtual($contateste, $tipo + 1);
 
     $tabela                     = new lib\ui\tabela();
     $linhas                     = array();
@@ -48,11 +49,13 @@ for ($tipo = 0; $tipo < 4; $tipo++)
 
         $celula01               = new lib\ui\celulatabela(false);
         $celula01->valor        = $contobj->nome;
+        $celula01->url          = "transacoes.php?c=$contobj->id";
         array_push($celulasdado, $celula01);
 
         $celula02               = new lib\ui\celulatabela(false);
         $celula02->alinhamento  = 'right';
         $celula02->valor        = number_format($contobj->saldo / 100, 2, ',', '.');
+        $celula02->url          = "transacoes.php?c=$contobj->id";
         array_push($celulasdado, $celula02);
 
         $linhadado->celulas     = $celulasdado;
@@ -72,5 +75,5 @@ for ($tipo = 0; $tipo < 4; $tipo++)
 echo("</div>\n");
 echo("</div>\n");
 
-include_once('../../footer.php');
+include_once('../footer.php');
 ?>

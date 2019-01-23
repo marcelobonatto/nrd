@@ -2,7 +2,7 @@
     "bd": {
         "serv": "localhost",
         "port": 3306,
-        "banc": "nrd",
+        "banc": "casorg",
         "usua": "root",
         "senh": ""
     }

@@ -17,6 +17,7 @@ class celulatabela
     public $indicepai       = -1;
     public $classe          = '';
     public $ehtitulo        = FALSE;
+    public $url             = '';
 
     function __construct($ehtitulo)
     {
@@ -69,7 +70,17 @@ class celulatabela
 
     public function Gerar()
     {
-        $html = $this->IniciarCelula() . $this->valor . $this->FinalizarCelula();
+        $inilink    = '';
+        $fimlink    = '';
+
+        if (!empty($this->url))
+        {
+            $inilink    = "<a href=\"$this->url\">";
+            $fimlink    = '</a>';
+        }
+
+        $html       =     $this->IniciarCelula() . $inilink . $this->valor . $fimlink . $this->FinalizarCelula();
+
         return $html;
     }
 }

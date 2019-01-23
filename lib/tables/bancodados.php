@@ -5,7 +5,7 @@ class bancodados
 {
     function Conectar()
     {
-        $contarq    = file_get_contents(realpath('../../config/config.json'));
+        $contarq    = file_get_contents(realpath('../config/config.json'));
         $json       = json_decode($contarq);
 
         $mysql      = new \mysqli($json->bd->serv, $json->bd->usua, $json->bd->senh, $json->bd->banc, $json->bd->port);
